@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OlcsóUtazás – Last minute jegyek és szállások</title>
+    
+    <!-- CSS fájl behívása -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== FEJLÉC ===== -->
+    <header>
+        <a href="#" class="logo" onclick="oldalValtas('jegyek-oldal')">✈️ OlcsóUtazás</a>
+        <nav>
+            <a href="#" class="nav-link active" onclick="oldalValtas('jegyek-oldal')">Repjegyek</a>
+            <a href="#" class="nav-link" onclick="oldalValtas('szallasok-oldal')">Szállások</a>
+            <a href="#" class="nav-link" onclick="oldalValtas('kapcsolat-oldal')">Kapcsolat</a>
+        </nav>
+    </header>
+
+    <!-- ===== NYITÓ CÍMSOR / HERO ===== -->
+    <section class="hero">
+        <h2>Utazz olcsón, utazz most!</h2>
+        <p>Minden nap frissülő last minute ajánlatok egy helyen.</p>
+    </section>
+
+    <!-- MAIN TARTALOM -->
+    <main>
+        
+        <!-- ===== 1. OLDAL: REPJEGYEK ===== -->
+        <section id="jegyek-oldal" class="oldal active">
+            <h2 class="szakasz-cim">Dinamikus Last Minute Repjegyek</h2>
+
+            <!-- Kereső és Rendezés -->
+            <div class="szuro-sav">
+                <input type="text" id="jegy-kereso" class="szuro-input" placeholder="🔍 Keresés városra vagy országra...">
+                <select id="jegy-rendezes" class="szuro-select">
+                    <option value="alap">Rendezés: Alapértelmezett</option>
+                    <option value="olcso">Ár szerint: Legolcsóbb elöl</option>
+                    <option value="draga">Ár szerint: Legdrágább elöl</option>
+                </select>
+            </div>
+
+            <!-- Kártyák konténere -->
+            <div id="jegyek-kontener" class="kartyak"></div>
+        </section>
+
+
+        <!-- ===== 2. OLDAL: SZÁLLÁSOK ===== -->
+        <section id="szallasok-oldal" class="oldal">
+            <h2 class="szakasz-cim">Kedvező Árú Szállások</h2>
+
+            <!-- Kereső és Rendezés -->
+            <div class="szuro-sav">
+                <input type="text" id="szallas-kereso" class="szuro-input" placeholder="🔍 Keresés szállásra vagy városra...">
+                <select id="szallas-rendezes" class="szuro-select">
+                    <option value="alap">Rendezés: Alapértelmezett</option>
+                    <option value="olcso">Ár szerint: Legolcsóbb elöl</option>
+                    <option value="draga">Ár szerint: Legdrágább elöl</option>
+                </select>
+            </div>
+
+            <!-- Kártyák konténere -->
+            <div id="szallasok-kontener" class="kartyak"></div>
+        </section>
+
+
+        <!-- ===== 3. OLDAL: KAPCSOLAT ===== -->
+        <section id="kapcsolat-oldal" class="oldal">
+            <h2 class="szakasz-cim">Lépj velünk kapcsolatba</h2>
+
+            <div class="kapcsolat-kontener">
+                <form id="kapcsolat-urlap">
+                    <div class="urlap-csoport">
+                        <label for="nev">Név:</label>
+                        <input type="text" id="nev" required placeholder="Az Ön neve">
+                    </div>
+                    <div class="urlap-csoport">
+                        <label for="email">E-mail cím:</label>
+                        <input type="email" id="email" required placeholder="pelda@email.hu">
+                    </div>
+                    <div class="urlap-csoport">
+                        <label for="uzenettipus">Téma:</label>
+                        <select id="uzenettipus" class="szuro-select" style="width: 100%;">
+                            <option value="jegy">Repülőjegy érdeklődés</option>
+                            <option value="szallas">Szállás foglalás</option>
+                            <option value="egyeb">Egyéb kérdés</option>
+                        </select>
+                    </div>
+                    <div class="urlap-csoport">
+                        <label for="uzenet">Üzenet:</label>
+                        <textarea id="uzenet" rows="5" required placeholder="Írja meg kérdését..."></textarea>
+                    </div>
+                    <button type="submit" class="kuldes-gomb">Üzenet küldése</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== LÁBLÉC ===== -->
+    <footer>
+        <p>Kérdésed van? Írj nekünk: igenmajd kitalalom.hu😂</p>
+        <p>&copy; 2026 OlcsóUtazás | Minden jog fenntartva🤷‍♀️.</p>
+    </footer>
+
+    <!-- JavaScript fájl behívása -->
+    <script src="script.js"></script>
+</body>
+</html>

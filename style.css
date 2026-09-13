@@ -1,0 +1,314 @@
+/* ==========================================================================
+   1. ALAP BEÁLLÍTÁSOK ÉS VÁLTOZÓK
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fb;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Main tartalom rugalmas kitöltése a footerig */
+main {
+    flex: 1;
+}
+
+/* ==========================================================================
+   2. FEJLÉC ÉS NAVIGÁCIÓ
+   ========================================================================== */
+header {
+    background-color: #1b3a6b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.logo {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffb703;
+}
+
+/* Aktív menüpont megjelölése */
+.nav-link.active {
+    background-color: #ffb703;
+    color: #1b3a6b;
+}
+
+/* ==========================================================================
+   3. HERO / NYITÓ SZAKASZ
+   ========================================================================== */
+.hero {
+    background: linear-gradient(rgba(27, 58, 107, 0.8), rgba(27, 58, 107, 0.8)),
+                url('https://picsum.photos/seed/utazas/1600/500') center/cover no-repeat;
+    color: #fff;
+    text-align: center;
+    padding: 4rem 1rem;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   4. OLDALAK (PAGES) LÁTHATÓSÁGA
+   ========================================================================== */
+.oldal {
+    display: none; /* Alapértelmezetten rejtett minden oldal */
+}
+
+.oldal.active {
+    display: block; /* Csak az aktív oldal látszik */
+}
+
+.szakasz-cim {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #1b3a6b;
+    margin: 2rem 0 1.5rem;
+}
+
+/* ==========================================================================
+   5. KERESŐ ÉS SZŰRŐ SÁV
+   ========================================================================== */
+.szuro-sav {
+    max-width: 1100px;
+    margin: 0 auto 1.5rem;
+    padding: 0 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.szuro-input, .szuro-select {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.szuro-input {
+    flex: 1;
+    min-width: 220px;
+}
+
+.szuro-select {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   6. KÁRTYÁK RÁCSOS ELRENDEZÉSE (GRID)
+   ========================================================================== */
+.kartyak {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+    padding: 0 1rem;
+}
+
+.kartya {
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.kartya:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.kartya img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.kartya-tartalom {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.kartya h3 {
+    color: #1b3a6b;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.kartya-info {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: #555;
+}
+
+.ar {
+    color: #e63946;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0.8rem 0 0.5rem;
+}
+
+.cimke {
+    display: inline-block;
+    background-color: #ffd60a;
+    color: #000;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+/* Vásárlás / Foglalás gomb */
+.vasarlas-gomb {
+    display: block;
+    text-align: center;
+    background-color: #1b3a6b;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: auto; /* A kártya aljára tolja a gombot */
+    transition: background-color 0.3s;
+}
+
+.vasarlas-gomb:hover {
+    background-color: #ffb703;
+    color: #1b3a6b;
+}
+
+/* ==========================================================================
+   7. KAPCSOLATI ŰRLAP
+   ========================================================================== */
+.kapcsolat-kontener {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.urlap-csoport {
+    margin-bottom: 1.2rem;
+}
+
+.urlap-csoport label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+    color: #1b3a6b;
+}
+
+.urlap-csoport input,
+.urlap-csoport textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.kuldes-gomb {
+    width: 100%;
+    background-color: #1b3a6b;
+    color: #fff;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.kuldes-gomb:hover {
+    background-color: #ffb703;
+    color: #1b3a6b;
+}
+
+/* ==========================================================================
+   8. LÁBLÉC (FOOTER)
+   ========================================================================== */
+footer {
+    background-color: #1b3a6b;
+    color: #fff;
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0.3rem 0;
+}
+
+/* Responsive igazítás mobilon */
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .szuro-sav {
+        flex-direction: column;
+    }
+}
