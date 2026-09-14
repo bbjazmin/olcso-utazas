@@ -1,10 +1,11 @@
 /* ==========================================================================
-   1. ADATOK – Dinamikus dátumszámítással
+   1. ADATOK ÉS DÁTUM SZÁMÍTÁS (Model)
    ========================================================================== */
 
 // Függvény a dátum léptetéséhez (X nappal a mai naphoz képest)
 function datumEltolassal(napok) {
     const d = new Date();
+    // A setDate automatikusan kezeli a hónapváltást (pl. szept. 30 + 5 nap -> okt. 5)
     d.setDate(d.getDate() + napok);
     return d;
 }
@@ -14,11 +15,13 @@ function datumTartomanyFormazas(kezdoEltolas, vegEltolas) {
     const kezdo = datumEltolassal(kezdoEltolas);
     const veg = datumEltolassal(vegEltolas);
 
+    // A getMonth() 0-tól indexel (január = 0), így a tömb első eleme a január
     const honapok = ['jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'];
 
     const kezdoHonap = honapok[kezdo.getMonth()];
     const vegHonap = honapok[veg.getMonth()];
 
+    // Ha ugyanabban a hónapban van kezdet és vég, csak a napot írjuk ki kétszer
     if (kezdoHonap === vegHonap) {
         return `${kezdoHonap} ${kezdo.getDate()}–${veg.getDate()}.`;
     } else {
@@ -26,7 +29,7 @@ function datumTartomanyFormazas(kezdoEltolas, vegEltolas) {
     }
 }
 
-// 8 db Repülőjegy ajánlat
+// Repülőjegy ajánlatokat tartalmazó objektum-tömb (valós projektben ez API-ból jönne)
 const repjegyAdatok = [
     { nev: "Róma, Olaszország", eltolasKezd: 2, eltolasVeg: 5, legitarsasag: "Wizz Air", ar: 18900, cimke: "Last minute – 6 hely!", kep: "roma", url: "https://wizzair.com" },
     { nev: "London, Egyesült Királyság", eltolasKezd: 4, eltolasVeg: 8, legitarsasag: "Ryanair", ar: 24500, cimke: "Csupán 3 jegy maradt!", kep: "london", url: "https://www.ryanair.com" },
@@ -38,7 +41,7 @@ const repjegyAdatok = [
     { nev: "Málta", eltolasKezd: 8, eltolasVeg: 14, legitarsasag: "Ryanair", ar: 19500, cimke: "Tengerparti pihenés", kep: "malta", url: "https://www.ryanair.com" }
 ];
 
-// 8 db Szállás ajánlat
+// Szállás ajánlatokat tartalmazó objektum-tömb
 const szallasAdatok = [
     { nev: "Tengerparti apartman – Kréta", leiras: "📍 150 m a tengerparttól", ertekeles: "⭐ 4,3 / 5 (128 értékelés)", ar: 12500, kep: "hotel1", url: "https://www.booking.com" },
     { nev: "Belvárosi hostel – Róma", leiras: "📍 300 m a Colosseumtól", ertekeles: "⭐ 4,1 / 5 (96 értékelés)", ar: 9900, kep: "hotel2", url: "https://www.booking.com" },
@@ -51,17 +54,19 @@ const szallasAdatok = [
 ];
 
 /* ==========================================================================
-   2. DOM ELEMEK RENDERELÉSE (Megjelenítése)
+   2. DOM ELEMEK RENDERELÉSE (View)
    ========================================================================== */
 
+// Repülőjegy kártyák dinamikus generálása
 function repjegyekKirajzolasa(lista) {
     const kontener = document.getElementById('jegyek-kontener');
-    kontener.innerHTML = '';
+    let htmlTartalom = ''; // Először egy string változóba gyűjtjük a HTML-t
 
     lista.forEach(jegy => {
         const datumSzoveg = datumTartomanyFormazas(jegy.eltolasKezd, jegy.eltolasVeg);
         
-        kontener.innerHTML += `
+        // Template literal (backtick) segítségével HTML struktúrát építünk
+        htmlTartalom += `
             <article class="kartya">
                 <img src="https://picsum.photos/seed/${jegy.kep}/400/240" alt="${jegy.nev}">
                 <div class="kartya-tartalom">
@@ -75,14 +80,18 @@ function repjegyekKirajzolasa(lista) {
             </article>
         `;
     });
+
+    // Optimalizálás: A DOM-ba csak egyszer nyúlunk, a ciklus végén
+    kontener.innerHTML = htmlTartalom;
 }
 
+// Szállás kártyák dinamikus generálása
 function szallasokKirajzolasa(lista) {
     const kontener = document.getElementById('szallasok-kontener');
-    kontener.innerHTML = '';
+    let htmlTartalom = '';
 
     lista.forEach(szallas => {
-        kontener.innerHTML += `
+        htmlTartalom += `
             <article class="kartya">
                 <img src="https://picsum.photos/seed/${szallas.kep}/400/240" alt="${szallas.nev}">
                 <div class="kartya-tartalom">
@@ -95,28 +104,33 @@ function szallasokKirajzolasa(lista) {
             </article>
         `;
     });
+
+    kontener.innerHTML = htmlTartalom;
 }
 
 /* ==========================================================================
-   3. KERESÉS ÉS RENDEZÉS LOGIKA
+   3. KERESÉS ÉS RENDEZÉS LOGIKA (Controller)
    ========================================================================== */
 
 function szuresEsRendezes() {
-    // Jegyek szűrése
+    // --- Jegyek szűrése és rendezése ---
+    // Értékek lekérdezése a DOM-ból, kisbetűssé alakítva a kis/nagybetű érzéketlenség miatt
     const jegyKereses = document.getElementById('jegy-kereso').value.toLowerCase();
     const jegyRendezes = document.getElementById('jegy-rendezes').value;
 
+    // A filter metódus új tömböt hoz létre, amely csak a feltételnek megfelelő elemeket tartalmazza
     let szurtJegyek = repjegyAdatok.filter(j => j.nev.toLowerCase().includes(jegyKereses));
 
+    // A sort metódus egy komparátor függvényt kap. Ha az eredmény negatív, az 'a' kerül előre.
     if (jegyRendezes === 'olcso') {
-        szurtJegyek.sort((a, b) => a.ar - b.ar);
+        szurtJegyek.sort((a, b) => a.ar - b.ar); // Növekvő sorrend (olcsó -> drága)
     } else if (jegyRendezes === 'draga') {
-        szurtJegyek.sort((a, b) => b.ar - a.ar);
+        szurtJegyek.sort((a, b) => b.ar - a.ar); // Csökkenő sorrend (drága -> olcsó)
     }
 
     repjegyekKirajzolasa(szurtJegyek);
 
-    // Szállások szűrése
+    // --- Szállások szűrése és rendezése ---
     const szallasKereses = document.getElementById('szallas-kereso').value.toLowerCase();
     const szallasRendezes = document.getElementById('szallas-rendezes').value;
 
@@ -135,20 +149,19 @@ function szuresEsRendezes() {
    4. OLDALVÁLTÁS (NAVIGÁCIÓ)
    ========================================================================== */
 
+// Egyszerű SPA (Single Page Application) logika megvalósítása
 function oldalValtas(oldalId) {
-    // Minden oldalt elrejtünk
+    // Az összes oldal és nav elem inaktívvá tétele
     document.querySelectorAll('.oldal').forEach(oldal => oldal.classList.remove('active'));
-    // Navigációs gombokról levesszük az aktív kijelölést
     document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
 
-    // Megjelenítjük a kiválasztott oldalt
+    // A kiválasztott oldal és gomb aktiválása
     document.getElementById(oldalId).classList.add('active');
     
-    // Rákattintott gombra rátesszük az aktív stílust
     const aktivGomb = document.querySelector(`.nav-link[onclick="oldalValtas('${oldalId}')"]`);
     if(aktivGomb) aktivGomb.classList.add('active');
 
-    // Görgetés az oldal tetejére
+    // Sima görgetés az oldal tetejére (UX javítás)
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -156,21 +169,27 @@ function oldalValtas(oldalId) {
    5. ESEMÉNYFIGYELŐK ÉS INICIALIZÁLÁS
    ========================================================================== */
 
+// A DOMContentLoaded biztosítja, hogy a JS csak akkor fusson, ha az HTML teljesen betöltődött
 document.addEventListener('DOMContentLoaded', () => {
-    // Alapértelmezett kirajzolás
+    // 1. Alapértelmezett adatok kirajzolása az oldal betöltésekor
     repjegyekKirajzolasa(repjegyAdatok);
     szallasokKirajzolasa(szallasAdatok);
 
-    // Keresők eseményei
+    // 2. Eseményfigyelők (Event Listeners) hozzáadása a beviteli mezőkhöz
+    // 'input' esemény: minden gépelésnél lefut (valós idejű szűrés)
     document.getElementById('jegy-kereso').addEventListener('input', szuresEsRendezes);
+    // 'change' esemény: akkor fut le, ha a legördülő menü értéke megváltozik
     document.getElementById('jegy-rendezes').addEventListener('change', szuresEsRendezes);
+    
     document.getElementById('szallas-kereso').addEventListener('input', szuresEsRendezes);
     document.getElementById('szallas-rendezes').addEventListener('change', szuresEsRendezes);
 
-    // Kapcsolati űrlap beküldése
+    // 3. Kapcsolati űrlap beküldésének kezelése
     document.getElementById('kapcsolat-urlap').addEventListener('submit', (e) => {
+        // Megakadályozzuk a böngésző alapértelmezett viselkedését (oldal újratöltése)
         e.preventDefault();
         alert('Köszönjük az üzenetet! Hamarosan válaszolunk.');
+        // Az űrlap visszaállítása alapállapotba (mezők ürítése)
         e.target.reset();
     });
 });
